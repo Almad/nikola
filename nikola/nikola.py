@@ -132,6 +132,7 @@ class Nikola(object):
             'THUMBNAIL_SIZE': 180,
             'USE_BUNDLES': True,
             'USE_CDN': False,
+            'USE_DIRECTORIES': False,
             'USE_FILENAME_AS_TITLE': True,
         }
 
@@ -518,7 +519,8 @@ class Nikola(object):
                             self.config['BLOG_URL'],
                             self.MESSAGES,
                             template_name,
-                            self.config['FILE_METADATA_REGEXP'])
+                            self.config['FILE_METADATA_REGEXP'],
+                            self.config['USE_DIRECTORIES'])
                         for lang, langpath in list(
                                 self.config['TRANSLATIONS'].items()):
                             dest = (destination, langpath, dir_glob,

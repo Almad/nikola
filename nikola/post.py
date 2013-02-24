@@ -41,7 +41,7 @@ class Post(object):
 
     def __init__(self, source_path, cache_folder, destination, use_in_feeds,
                  translations, default_lang, blog_url, messages, template_name,
-                 file_metadata_regexp=None):
+                 file_metadata_regexp=None, use_directories=False):
         """Initialize post.
 
         The base path is the .txt post file. From it we calculate
@@ -63,6 +63,7 @@ class Post(object):
         self.default_lang = default_lang
         self.messages = messages
         self.template_name = template_name
+        self.use_directories = use_directories
         if os.path.isfile(self.metadata_path):
             with codecs.open(self.metadata_path, "r", "utf8") as meta_file:
                 meta_data = meta_file.readlines()
@@ -195,9 +196,16 @@ class Post(object):
             data = ''.join(teaser)
         return data
 
+    def trailing_name(self, lang, extension):
+        if self.use_directories and self.pagenames[lang] != 'index':
+            trail = os.path.join(self.pagenames[lang], 'index' + extension)
+        else:
+            trail = self.pagenames[lang] + extension
+        return trail
+
     def destination_path(self, lang, extension='.html'):
         path = os.path.join(self.translations[lang],
-                            self.folder, self.pagenames[lang] + extension)
+                            self.folder, self.trailing_name(lang, extension))
         return path
 
     def permalink(self, lang=None, absolute=False, extension='.html'):
@@ -205,7 +213,7 @@ class Post(object):
             lang = self.default_lang
         pieces = list(os.path.split(self.translations[lang]))
         pieces += list(os.path.split(self.folder))
-        pieces += [self.pagenames[lang] + extension]
+        pieces += [self.trailing_name(lang, extension)]
         pieces = [_f for _f in pieces if _f]
         if absolute:
             pieces = [self.blog_url] + pieces
