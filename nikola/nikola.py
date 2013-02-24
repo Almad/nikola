@@ -134,6 +134,7 @@ class Nikola(object):
             'THUMBNAIL_SIZE': 180,
             'USE_BUNDLES': True,
             'USE_CDN': False,
+            'USE_DIRECTORIES': False,
             'USE_FILENAME_AS_TITLE': True,
             'TIMEZONE': None,
         }
@@ -527,6 +528,7 @@ class Nikola(object):
                             self.MESSAGES,
                             template_name,
                             self.config['FILE_METADATA_REGEXP'],
+                            self.config['USE_DIRECTORIES']),
                             tzinfo,
                         )
                         for lang, langpath in list(
